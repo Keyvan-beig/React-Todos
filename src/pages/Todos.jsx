@@ -1,5 +1,6 @@
 import { useContext, useEffect } from "react"
 import TodoContext from "../context/TodoContext"
+import axios from "axios"
 
 const Todos = () => {
 
@@ -9,22 +10,22 @@ const Todos = () => {
 
         const url = "https://jsonplaceholder.typicode.com/users/1/todos"
 
-        fetch(url)
-            .then(result => result.json())
-            .then((data) => {
-                todoContext.dispatch({ type: 'SET_TODOS', payload: data })
-
+        axios.get(url)
+            .then(res => {
+                todoContext.dispatch({ type: 'SET_TODOS', payload: res.data })
+                
             })
-            .catch(() => {
+            .catch(err => console.log(err.message))
 
-            })
     }, [])
 
     return (
         <>
 
-        {console.log(todoContext.state)}
-            
+            {todoContext.state.todos.map(item=>{
+                return <p key={item.id}>{item.title}</p>
+            })}
+
         </>
     )
 }
