@@ -1,31 +1,32 @@
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import TodoContext from "../context/TodoContext"
-import axios from "axios"
+
 
 const Todos = () => {
 
-    const todoContext = useContext(TodoContext)
+    const { todos, error, getTodos } = useContext(TodoContext)
+    const [loading, setLoading] = useState(true)    
 
     useEffect(() => {
 
-        const url = "https://jsonplaceholder.typicode.com/users/1/todos"
+        (async () => {
 
-        axios.get(url)
-            .then(res => {
-                todoContext.dispatch({ type: 'SET_TODOS', payload: res.data })
-                
-            })
-            .catch(err => console.log(err.message))
+            await getTodos()
 
-    }, [])
+            setLoading(false)
+
+        })()
+
+    }, [getTodos])
 
     return (
         <>
+            {loading && <p>Loading...</p >}
+            {error && <p>{error}</p>}
 
-            {todoContext.state.todos.map(item=>{
+            {todos.map(item => {
                 return <p key={item.id}>{item.title}</p>
             })}
-
         </>
     )
 }
