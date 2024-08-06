@@ -1,17 +1,22 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { FaRegTrashAlt } from "react-icons/fa";
 import TodoContext from "../context/TodoContext";
+import Loading from "./Loading";
 
-const Delete = ({todoID}) => {
+const Delete = ({ todoID }) => {
 
-    const {removeTodo} = useContext(TodoContext)
+    const [loading, setLoading] = useState(false)
 
-    const handelDelete = async ()=>{
+    const { removeTodo } = useContext(TodoContext)
+
+    const handelDelete = async () => {
+        setLoading(true)
         await removeTodo(todoID)
     }
     return (
         <>
-            <FaRegTrashAlt onClick={()=> handelDelete()}/>
+            {loading && <Loading />}
+            <FaRegTrashAlt onClick={() => handelDelete()} />
         </>
     )
 }

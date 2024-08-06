@@ -1,14 +1,18 @@
-import { useContext, useRef } from "react"
+import { useContext, useRef, useState } from "react"
 import TodoContext from "../context/TodoContext"
+import Loading from "./Loading"
 
 const CreateTodo = () => {
 
+    const [loading,setLoading] = useState()
     const { createTodo } = useContext(TodoContext)
     const title = useRef()
 
     const handelForm = async (e) => {
+        setLoading(true)
         e.preventDefault()
         await createTodo(title.current.value)
+        setLoading(false)
     }
 
     return (
@@ -28,6 +32,7 @@ const CreateTodo = () => {
                         type="submit"
                         value="Submit"
                     />
+                    {loading && <span className="inline-block"><Loading/></span>}
                 </form>
                 <hr />
             </div>
